@@ -2,7 +2,13 @@
 // TypeScript Version: 2.8
 
 declare module 'react-native-reanimated' {
-  import { ComponentClass, ReactNode, Component, RefObject, ComponentType } from 'react';
+  import {
+    ComponentClass,
+    ReactNode,
+    Component,
+    RefObject,
+    ComponentType,
+  } from 'react';
   import {
     ViewProps,
     TextProps,
@@ -182,31 +188,31 @@ declare module 'react-native-reanimated' {
 
     export const SpringUtils: SpringUtils;
 
-    export type TransformStyleTypes = TransformsStyle['transform'] extends (
+    export type TransformStyleTypes = TransformsStyle['transform'] extends
       | readonly (infer T)[]
-      | undefined)
+      | undefined
       ? T
       : never;
     export type AdaptTransforms<T> = {
       [P in keyof T]: Adaptable<T[P] extends string ? number | string : T[P]>;
     };
-    export type AnimatedTransform = (AdaptTransforms<TransformStyleTypes>)[];
+    export type AnimatedTransform = AdaptTransforms<TransformStyleTypes>[];
 
     export type AnimateStyle<S extends object> = {
       [K in keyof S]: K extends 'transform'
         ? AnimatedTransform
-        : (S[K] extends ReadonlyArray<any>
-            ? ReadonlyArray<AnimateStyle<S[K][0]>>
-            : S[K] extends object
-            ? AnimateStyle<S[K]> // allow `number` where `string` normally is to support colors
-            : S[K] extends (string | undefined)
-            ? S[K] | number
-            :
-                | S[K]
-                | AnimatedNode<
-                    // allow `number` where `string` normally is to support colors
-                    S[K] extends (string | undefined) ? S[K] | number : S[K]
-                  >);
+        : S[K] extends ReadonlyArray<any>
+        ? ReadonlyArray<AnimateStyle<S[K][0]>>
+        : S[K] extends object
+        ? AnimateStyle<S[K]> // allow `number` where `string` normally is to support colors
+        : S[K] extends string | undefined
+        ? S[K] | number
+        :
+            | S[K]
+            | AnimatedNode<
+                // allow `number` where `string` normally is to support colors
+                S[K] extends string | undefined ? S[K] | number : S[K]
+              >;
     };
 
     export type AnimateProps<
@@ -242,7 +248,10 @@ declare module 'react-native-reanimated' {
       getNode(): ReactNativeScrollView;
     }
     export class Code extends Component<CodeProps> {}
-    export function createAnimatedComponent<S extends object, P extends { style?: StyleProp<S>; }>(component: ComponentType<P>): ComponentType<AnimateProps<S, P>>;
+    export function createAnimatedComponent<
+      S extends object,
+      P extends { style?: StyleProp<S> }
+    >(component: ComponentType<P>): ComponentType<AnimateProps<S, P>>;
 
     // classes
     export {
@@ -405,7 +414,7 @@ declare module 'react-native-reanimated' {
       easing?: EasingFunction;
     }
     export function withTiming(
-      toValue: number,
+      toValue: number | string,
       userConfig?: WithTimingConfig,
       callback?: (isFinished: boolean) => void
     ): number;
@@ -421,7 +430,10 @@ declare module 'react-native-reanimated' {
     export function cancelAnimation<T extends SharedValue<SharedValueType>>(
       sharedValue: T
     ): void;
-    export function withDelay(delayMS: number, delayedAnimation: number): number;
+    export function withDelay(
+      delayMS: number,
+      delayedAnimation: number
+    ): number;
     export function withRepeat(
       animation: number,
       numberOfReps?: number,
@@ -481,8 +493,10 @@ declare module 'react-native-reanimated' {
       effects: (dependencies: D) => void,
       deps?: DependencyList
     );
-                        
-    export type AnimatedStyleProp<T extends object> = AnimateStyle<T> | RegisteredStyle<AnimateStyle<T>>;
+
+    export type AnimatedStyleProp<T extends object> =
+      | AnimateStyle<T>
+      | RegisteredStyle<AnimateStyle<T>>;
     export function useAnimatedStyle<
       T extends AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle>
     >(updater: () => T, deps?: DependencyList): T;
